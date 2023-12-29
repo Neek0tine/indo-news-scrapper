@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # replace with your folder's path
-folder_path = r'./scrapped'
+folder_path = r'./raw_scrapped'
 all_files = os.listdir(folder_path)
 # Filter out non-CSV files
 csv_files = [f for f in all_files if f.endswith('.csv')]
