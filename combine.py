@@ -28,4 +28,4 @@ for csv in csv_files:
 big_df = pd.concat(df_list, ignore_index=True)
 
 # Save the final result to a new CSV file
-big_df.to_csv(os.path.join(folder_path, '../combined_file.csv'), index=False)
+big_df.to_csv(os.path.join(folder_path, '../dataset/combined_file.csv'), index=False)
