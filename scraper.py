@@ -65,6 +65,7 @@ def tribun_query(q='pemilu'):
     
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")
+    options.add_argument('--disable-gpu')
     # options.add_argument("--disable-crash-reporter");
     # options.add_argument("--disable-extensions");
     # options.add_argument("--disable-in-process-stack-traces");
@@ -78,8 +79,8 @@ def tribun_query(q='pemilu'):
 
     # Initialize the WebDriver
 # ----------------------------------------- URL VARIABLES ------------------------------------------------------
-    driver.get('https://www.kompas.com/')
-    search_bar = driver.find_element(By.NAME, 'q')
+    driver.get('https://www.detik.com/')
+    search_bar = driver.find_element(By.NAME, 'query')
     search_query = q
     search_bar.send_keys(search_query)
     search_bar.send_keys(Keys.RETURN)
@@ -88,7 +89,7 @@ def tribun_query(q='pemilu'):
     qsoup = BeautifulSoup(qresult, "html.parser")
 # ----------------------------------------- PAGINATION VARIABLES ------------------------------------------------------
     # tribun
-    # mydivs = qsoup.find("div", {"class": "paging.text_center"})
+    # mydivs = qsoup.find("div", {"class": "gsc-cursor"})
     # print(mydivs)
     # max_page = int(mydivs.getText(' ').split(' ')[-1])
     # pages = range(1, max_page)
@@ -114,8 +115,8 @@ def tribun_query(q='pemilu'):
                 # print(_a)
 # ----------------------------------------- FILTER VARIABLES ------------------------------------------------------
                 # match = re.findall(r"tribunnews.com/\d+/\d+/\d+", _a)
-                # match = re.findall(r"/d-\d+/", _a)
-                match = re.findall(r"/\d+/\d+/\d+/\d+", _a)
+                match = re.findall(r"/d-\d+/", _a)
+                # match = re.findall(r"/\d+/\d+/\d+/\d+", _a)
                 if match != []:
                     tresult.append(_a)
 
@@ -125,15 +126,14 @@ def tribun_query(q='pemilu'):
             # tribun
             # WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"[aria-label='Page {_p}']"))).click()
 
-            # detik
-            
-            if '&gsc.page=' in driver.current_url:
-                driver.get(str(driver.current_url).replace(f'&gsc.page={_p-1}', f'&gsc.page={_p}'))
+            # detik kompas     
+            if '&sortby=time&page=' in driver.current_url:
+                driver.get(str(driver.current_url).replace(f'&sortby=time&page={_p-1}', f'&sortby=time&page={_p}'))
 
-            elif '&gsc.page=' not in driver.current_url:
-                driver.get(str(driver.current_url) + f'&gsc.page={_p}')
+            elif '&sortby=time&page=' not in driver.current_url:
+                driver.get(str(driver.current_url) + f'&sortby=time&page={_p}')
 
-            print(driver.current_url)
+            # print(driver.current_url)
 
         except: 
             pass
@@ -156,15 +156,15 @@ def tribun_query(q='pemilu'):
         df.loc[i] = ([_title] + [_main] + [_source] + [_date] + [_url])
         _filename = f"raw_scrapped/{_domain}_keyword_{q}_.csv"
 
-    df.to_csv(_filename, index=False, sep=';')
+    df.to_csv(_filename, index=False, sep='~')
     print(f"File saved as {_filename}")
 
     
 
 
 
-# keywords = ['cawapres', 'pemilu', 'anies', 'ganjar', 'gibran', 'imin', 'mahfud', 'prabowo']
-keywords = ['anies', 'ganjar', 'gibran', 'imin', 'mahfud', 'prabowo']
+keywords = ['cawapres', 'capres', 'pemilu', 'anies', 'ganjar', 'gibran', 'imin', 'mahfud', 'prabowo']
+# keywords = ['cawapres', 'pemilu', 'capres']
 for key in keywords:
     tribun_query(key)
 # if __name__ == "__main__":

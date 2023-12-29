@@ -12,7 +12,7 @@ for csv in csv_files:
     file_path = os.path.join(folder_path, csv)
     try:
         # Try reading the file using default UTF-8 encoding
-        df = pd.read_csv(file_path, sep=';')
+        df = pd.read_csv(file_path, sep='~')
         df_list.append(df)
     except UnicodeDecodeError:
         try:
@@ -28,4 +28,4 @@ for csv in csv_files:
 big_df = pd.concat(df_list, ignore_index=True)
 
 # Save the final result to a new CSV file
-big_df.to_csv(os.path.join(folder_path, '../dataset/combined_file.csv'), index=False)
+big_df.to_csv(os.path.join(folder_path, '../dataset/combined_file.csv'), index=False, sep='~')
